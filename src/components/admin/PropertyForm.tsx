@@ -35,6 +35,7 @@ const propertySchema = z.object({
   bathrooms: z.coerce.number().min(0),
   size: z.coerce.number().positive({ message: 'Size must be a positive number' }),
   yearBuilt: z.coerce.number().int().min(1800).max(new Date().getFullYear()),
+  // Here's the key part: we're accepting a string input that will be transformed to a string array
   features: z.string().transform(val => val.split(',').map(item => item.trim()).filter(Boolean)),
   address: z.string().min(5),
   city: z.string(),
@@ -66,8 +67,7 @@ export const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
       bathrooms: property?.bathrooms || 0,
       size: property?.size || 0,
       yearBuilt: property?.yearBuilt || new Date().getFullYear(),
-      // The issue is here: we need to provide a string value for features, not a string array
-      // When initializing the form, we need to join the array into a comma-separated string
+      // We need to provide a string value for features, not a string array
       features: property?.features ? property.features.join(', ') : '',
       address: property?.location?.address || '',
       city: property?.location?.city || '',
@@ -90,7 +90,8 @@ export const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
       bathrooms: data.bathrooms,
       size: data.size,
       yearBuilt: data.yearBuilt,
-      features: data.features,
+      // Here's another key part: the transformed features value from Zod schema is already a string array
+      features: Array.isArray(data.features) ? data.features : data.features.split(',').map(item => item.trim()).filter(Boolean),
       images: property?.images || ["/placeholder.svg"],
       location: {
         address: data.address,
