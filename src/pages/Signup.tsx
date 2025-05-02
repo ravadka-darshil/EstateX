@@ -7,7 +7,7 @@ const Signup = () => {
       <div className="container">
         <div className="flex flex-col items-center">
           <h1 className="text-3xl font-bold mb-2">Create an Account</h1>
-          <p className="text-gray-600 mb-8">Join RealEstatePro to save properties and more</p>
+          <p className="text-gray-600 mb-8">Join EstateX to save properties and more</p>
           <SignupForm />
         </div>
       </div>

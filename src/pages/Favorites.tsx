@@ -1,17 +1,44 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropertyCard from '@/components/property/PropertyCard';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
+import { PropertyType } from '@/types/property';
 
 const Favorites = () => {
-  // For demo purposes, we'll use the first three properties as "favorites"
-  const [favoriteProperties, setFavoriteProperties] = useState(properties.slice(0, 3));
+  const [favoriteProperties, setFavoriteProperties] = useState<PropertyType[]>([]);
+
+  useEffect(() => {
+    // Load favorites from localStorage
+    const loadFavorites = () => {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const favoriteProps = properties.filter(property => favorites.includes(property.id));
+      setFavoriteProperties(favoriteProps);
+    };
+
+    loadFavorites();
+    
+    // Add event listener to update favorites if changed in another component
+    window.addEventListener('storage', loadFavorites);
+    
+    return () => {
+      window.removeEventListener('storage', loadFavorites);
+    };
+  }, []);
 
   const removeFromFavorites = (id: string) => {
+    // Update localStorage
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const newFavorites = favorites.filter((favId: string) => favId !== id);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    
+    // Update state
     setFavoriteProperties(favoriteProperties.filter(property => property.id !== id));
+    
+    // Dispatch storage event to notify other components
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

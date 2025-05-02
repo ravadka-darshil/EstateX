@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin } from 'lucide-react';
 import { PropertyType } from '@/types/property';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 interface PropertyCardProps {
@@ -15,16 +15,33 @@ interface PropertyCardProps {
 const PropertyCard = ({ property }: PropertyCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // Load favorite status from localStorage on component mount
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorite(favorites.includes(property.id));
+  }, [property.id]);
+
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsFavorite(!isFavorite);
     
-    if (!isFavorite) {
-      toast.success("Property added to favorites");
-    } else {
+    // Get current favorites from localStorage
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    
+    let newFavorites;
+    if (isFavorite) {
+      // Remove from favorites
+      newFavorites = favorites.filter((id: string) => id !== property.id);
       toast.info("Property removed from favorites");
+    } else {
+      // Add to favorites
+      newFavorites = [...favorites, property.id];
+      toast.success("Property added to favorites");
     }
+    
+    // Update localStorage and state
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    setIsFavorite(!isFavorite);
   };
 
   const formatPrice = (price: number) => {

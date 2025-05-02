@@ -7,7 +7,7 @@ const Login = () => {
       <div className="container">
         <div className="flex flex-col items-center">
           <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-gray-600 mb-8">Sign in to your RealEstatePro account</p>
+          <p className="text-gray-600 mb-8">Sign in to your EstateX account</p>
           <LoginForm />
         </div>
       </div>

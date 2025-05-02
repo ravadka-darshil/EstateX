@@ -1,6 +1,5 @@
-
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,11 +10,20 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Link } from 'react-router-dom';
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const property = properties.find(p => p.id === id);
   const [isFavorite, setIsFavorite] = useState(false);
+  
+  // Load favorite status from localStorage on component mount
+  useEffect(() => {
+    if (id) {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      setIsFavorite(favorites.includes(id));
+    }
+  }, [id]);
   
   if (!property) {
     return (
@@ -23,7 +31,7 @@ const PropertyDetail = () => {
         <h2 className="text-2xl font-semibold mb-4">Property Not Found</h2>
         <p className="text-gray-600 mb-8">The property you are looking for might have been removed or is no longer available.</p>
         <Button asChild>
-          <a href="/properties">View All Properties</a>
+          <Link to="/properties">View All Properties</Link>
         </Button>
       </div>
     );
@@ -38,13 +46,23 @@ const PropertyDetail = () => {
   };
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    // Get current favorites from localStorage
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     
-    if (!isFavorite) {
-      toast.success("Property added to favorites");
-    } else {
+    let newFavorites;
+    if (isFavorite) {
+      // Remove from favorites
+      newFavorites = favorites.filter((favId: string) => favId !== id);
       toast.info("Property removed from favorites");
+    } else {
+      // Add to favorites
+      newFavorites = [...favorites, id];
+      toast.success("Property added to favorites");
     }
+    
+    // Update localStorage and state
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    setIsFavorite(!isFavorite);
   };
 
   const handleShare = () => {
@@ -177,8 +195,8 @@ const PropertyDetail = () => {
                 </div>
                 
                 <div className="pt-6">
-                  <Button className="w-full mb-3 bg-realestate-primary hover:bg-realestate-primary/90" onClick={handleContactAgent}>
-                    Contact Agent
+                  <Button className="w-full mb-3 bg-realestate-primary hover:bg-realestate-primary/90" asChild>
+                    <Link to={`/contact/${property.agent.id}?property=${property.id}`}>Contact Agent</Link>
                   </Button>
                   <Button className="w-full mb-3" variant="outline">
                     <Calendar size={18} className="mr-2" />

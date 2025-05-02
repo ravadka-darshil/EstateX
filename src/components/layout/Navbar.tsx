@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Link to="/" className="flex items-center">
-            <h1 className="text-xl font-bold text-realestate-primary">RealEstate<span className="text-realestate-secondary">Pro</span></h1>
+            <h1 className="text-xl font-bold text-realestate-primary">Estate<span className="text-realestate-secondary">X</span></h1>
           </Link>
         </div>
 

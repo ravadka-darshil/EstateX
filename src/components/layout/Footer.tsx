@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">RealEstatePro</h3>
+            <h3 className="text-xl font-bold mb-4">EstateX</h3>
             <p className="text-gray-300 mb-4">
               Find your dream home with our extensive listings and expert guidance. 
               We're committed to making real estate simple and accessible.
@@ -62,7 +62,7 @@ const Footer = () => {
               <p className="mb-2">1234 Real Estate Avenue</p>
               <p className="mb-2">Property City, PC 12345</p>
               <p className="mb-2">United States</p>
-              <p className="mb-2">Email: info@realestatepro.com</p>
+              <p className="mb-2">Email: info@estatex.com</p>
               <p>Phone: (123) 456-7890</p>
             </address>
           </div>
@@ -70,7 +70,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-300 text-sm mb-4 md:mb-0">
-            © {currentYear} RealEstatePro. All rights reserved.
+            © {currentYear} EstateX. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-gray-300 hover:text-white text-sm">Privacy Policy</Link>

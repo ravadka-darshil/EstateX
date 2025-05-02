@@ -14,6 +14,7 @@ import Signup from "./pages/Signup";
 import Favorites from "./pages/Favorites";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/NotFound";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/contact/:agentId" element={<Contact />} />
           </Route>
           
           {/* Admin routes */}
