@@ -81,7 +81,7 @@ const Index = () => {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="section-title">Why Choose RealEstatePro?</h2>
+              <h2 className="section-title">Why Choose EstateX?</h2>
               <p className="text-gray-600 mb-6">
                 With over 15 years of experience in the real estate market, we've helped thousands of clients find their perfect home or investment property. Our team of professional agents combines market knowledge with personalized service to make your real estate journey smooth and successful.
               </p>
