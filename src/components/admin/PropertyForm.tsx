@@ -66,7 +66,7 @@ export const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
       bathrooms: property?.bathrooms || 0,
       size: property?.size || 0,
       yearBuilt: property?.yearBuilt || new Date().getFullYear(),
-      features: property?.features?.join(', ') || '',
+      features: property?.features ? property.features.join(', ') : '',
       address: property?.location?.address || '',
       city: property?.location?.city || '',
       state: property?.location?.state || '',
