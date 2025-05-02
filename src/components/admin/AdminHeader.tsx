@@ -1,144 +1,170 @@
 
 import { useState } from 'react';
-import { Bell, User, Search, MessageSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Bell, User, Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const AdminHeader = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Search query:', searchQuery);
-  };
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="h-16 border-b bg-white flex items-center px-4 md:px-6">
-      <div className="flex-1 flex items-center">
-        <form onSubmit={handleSearch} className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="pl-8 w-full md:w-[300px] rounded-md"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </form>
-      </div>
-      
-      <div className="flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-realestate-secondary">
-                3
-              </Badge>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="max-h-[300px] overflow-auto">
-              {[1, 2, 3].map((i) => (
-                <DropdownMenuItem key={i} className="py-3 cursor-pointer">
-                  <div className="flex items-start gap-3">
-                    <Badge variant="outline" className="h-2 w-2 rounded-full mt-2 bg-realestate-secondary border-0" />
-                    <div>
-                      <p className="font-medium">New property inquiry</p>
-                      <p className="text-sm text-gray-500 mt-1">
-                        John Doe is interested in Sunset Villa property and requested more information.
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center font-medium">
-              View all notifications
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <MessageSquare className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-realestate-secondary">
-                5
-              </Badge>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Messages</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="max-h-[300px] overflow-auto">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <DropdownMenuItem key={i} className="py-3 cursor-pointer">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://i.pravatar.cc/150?img=${20+i}`} />
-                      <AvatarFallback>U{i}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <p className="font-medium">Jane Smith</p>
-                        <p className="text-xs text-gray-400">10:24 AM</p>
-                      </div>
-                      <p className="text-sm text-gray-500 truncate mt-1">
-                        Hi there! I'm interested in scheduling a viewing for the property on Oak Street.
-                      </p>
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center font-medium">
-              View all messages
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="pl-0" size="sm">
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src="https://i.pravatar.cc/150?img=33" />
-                  <AvatarFallback>
-                    <User className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium">Admin User</p>
-                  <p className="text-xs text-gray-500">Administrator</p>
+    <header className="border-b bg-background z-10">
+      <div className="flex h-16 items-center px-4">
+        <div className="md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+              <div className="py-4">
+                <div className="px-3 py-2">
+                  <h2 className="text-lg font-semibold tracking-tight">
+                    EstateX Admin
+                  </h2>
+                </div>
+                <div className="space-y-1 px-3 py-2">
+                  <Link
+                    to="/admin"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/admin/properties"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Properties
+                  </Link>
+                  <Link
+                    to="/admin/users"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Users
+                  </Link>
+                  <Link
+                    to="/admin/messages"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Messages
+                  </Link>
+                  <Link
+                    to="/admin/statistics"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Statistics
+                  </Link>
+                  <Link
+                    to="/admin/settings"
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                  >
+                    Settings
+                  </Link>
                 </div>
               </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-500">Log out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link to="/" className="font-semibold text-lg mr-4 md:mr-6">
+            Estate<span className="text-realestate-secondary">X</span>
+          </Link>
+        </div>
+
+        {searchOpen ? (
+          <div className="flex-1 ml-4">
+            <form className="flex items-center">
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="h-9 md:w-[300px] lg:w-[400px]"
+                autoFocus
+                onBlur={() => setSearchOpen(false)}
+              />
+            </form>
+          </div>
+        ) : (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="ml-4 md:ml-0" 
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search className="h-5 w-5" />
+            <span className="sr-only">Search</span>
+          </Button>
+        )}
+
+        <div className="ml-auto flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+                <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-realestate-primary" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <span className="font-medium">New Message</span>
+                <span className="ml-2 text-xs text-muted-foreground">2m ago</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <span className="font-medium">Property Listed</span>
+                <span className="ml-2 text-xs text-muted-foreground">1h ago</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <span className="font-medium">New User Registered</span>
+                <span className="ml-2 text-xs text-muted-foreground">3h ago</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="/placeholder.svg" alt="User" />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <span className="sr-only">User menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/admin/settings">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/">Visit Website</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/login">Logout</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

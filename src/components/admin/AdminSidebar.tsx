@@ -32,7 +32,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }: AdminSidebarProps) => {
     { name: 'Users', path: '/admin/users', icon: <Users size={20} /> },
     { name: 'Messages', path: '/admin/messages', icon: <MessageSquare size={20} /> },
     { name: 'Statistics', path: '/admin/statistics', icon: <PieChart size={20} /> },
-    { name: 'Calendar', path: '/admin/calendar', icon: <Calendar size={20} /> },
     { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
   ];
 
@@ -41,7 +40,7 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }: AdminSidebarProps) => {
       <div className="p-4 flex items-center justify-between border-b border-gray-700">
         {!isCollapsed && (
           <Link to="/admin" className="text-xl font-bold">
-            RealEstate<span className="text-realestate-secondary">Pro</span>
+            Estate<span className="text-realestate-secondary">X</span>
           </Link>
         )}
         <Button 

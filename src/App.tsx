@@ -13,6 +13,11 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Favorites from "./pages/Favorites";
 import Dashboard from "./pages/admin/Dashboard";
+import AdminProperties from "./pages/admin/Properties";
+import AdminUsers from "./pages/admin/Users";
+import AdminMessages from "./pages/admin/Messages";
+import AdminStatistics from "./pages/admin/Statistics";
+import AdminSettings from "./pages/admin/Settings";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 
@@ -39,7 +44,11 @@ const App = () => (
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
-            {/* Additional admin routes would go here */}
+            <Route path="properties" element={<AdminProperties />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="statistics" element={<AdminStatistics />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
