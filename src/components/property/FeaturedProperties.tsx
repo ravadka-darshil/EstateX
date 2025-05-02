@@ -11,7 +11,7 @@ interface FeaturedPropertiesProps {
 
 const FeaturedProperties = ({ properties }: FeaturedPropertiesProps) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 6; // Increased from 3 to 6 properties per page
 
   const totalPages = Math.ceil(properties.length / itemsPerPage);
   const displayedProperties = properties.slice(
@@ -33,7 +33,7 @@ const FeaturedProperties = ({ properties }: FeaturedPropertiesProps) => {
         <h2 className="section-title">Featured Properties</h2>
         <p className="section-subtitle">Explore our handpicked selection of premium properties</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {displayedProperties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
