@@ -102,10 +102,18 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
                 <Label className="mb-2 block">Price Range</Label>
                 <div className="px-2">
                   <Slider
+                    defaultValue={filters.priceRange}
                     value={filters.priceRange}
+                    min={0}
                     max={2000000}
                     step={50000}
-                    onValueChange={(value) => handleChange('priceRange', value as [number, number])}
+                    onValueChange={(value) => {
+                      // Ensure we always have a valid tuple with exactly 2 elements
+                      const priceRange: [number, number] = Array.isArray(value) && value.length >= 2 
+                        ? [value[0], value[1]] 
+                        : [0, 2000000];
+                      handleChange('priceRange', priceRange);
+                    }}
                     className="mt-6"
                   />
                 </div>
