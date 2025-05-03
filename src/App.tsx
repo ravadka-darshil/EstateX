@@ -12,6 +12,7 @@ import PropertyDetail from "./pages/PropertyDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Favorites from "./pages/Favorites";
+import Agents from "./pages/Agents";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminProperties from "./pages/admin/Properties";
 import AdminUsers from "./pages/admin/Users";
@@ -20,6 +21,7 @@ import AdminStatistics from "./pages/admin/Statistics";
 import AdminSettings from "./pages/admin/Settings";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
+import AgentDashboard from "./pages/agent/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/agents" element={<Agents />} />
             <Route path="/contact/:agentId" element={<Contact />} />
           </Route>
           
@@ -50,6 +53,9 @@ const App = () => (
             <Route path="statistics" element={<AdminStatistics />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
+          
+          {/* Agent routes */}
+          <Route path="/agent/dashboard" element={<AgentDashboard />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

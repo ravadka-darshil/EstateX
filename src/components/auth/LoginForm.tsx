@@ -1,120 +1,138 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { agents } from '@/data/agents';
+
+// Define form validation schema
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    remember: false,
+
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // In a real app, this would be an API call
+      // For demo, simulate login and check if email exists in our agents data
+      const agent = agents.find(a => a.email === data.email);
+      
+      if (agent) {
+        // Simulate successful login
+        setTimeout(() => {
+          toast.success("Login successful!");
+          
+          // Redirect based on role
+          if (agent.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/agent/dashboard');
+          }
+          
+          setIsLoading(false);
+        }, 1000);
+      } else {
+        throw new Error("Invalid credentials");
+      }
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
       setIsLoading(false);
-      toast.success('Logged in successfully');
-      // Redirect would happen here in real implementation
-    }, 1500);
+    }
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>
-          Enter your email and password to access your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Card className="w-full max-w-md">
+      <CardContent className="pt-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              name="email"
               type="email"
-              placeholder="name@example.com"
-              autoComplete="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
+              placeholder="you@example.com"
+              {...register('email')}
+              className={errors.email ? 'border-red-500' : ''}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
+
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between items-center">
               <Label htmlFor="password">Password</Label>
-              <Link
-                to="/forgot-password"
-                className="text-sm text-realestate-secondary hover:underline"
+              <a
+                href="#"
+                className="text-sm text-blue-600 hover:underline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.info("Password reset functionality would go here");
+                }}
               >
                 Forgot password?
-              </Link>
+              </a>
             </div>
             <Input
               id="password"
-              name="password"
               type="password"
               placeholder="••••••••"
-              autoComplete="current-password"
-              required
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
+              className={errors.password ? 'border-red-500' : ''}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
-          <div className="flex items-center space-x-2">
-            <input
-              id="remember"
-              name="remember"
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-realestate-primary focus:ring-realestate-primary"
-              checked={formData.remember}
-              onChange={handleChange}
-            />
-            <Label
-              htmlFor="remember"
-              className="text-sm font-normal cursor-pointer"
-            >
-              Remember me
-            </Label>
-          </div>
-          <Button 
-            type="submit" 
-            className="w-full bg-realestate-primary hover:bg-realestate-primary/90" 
+
+          <Button
+            type="submit"
+            className="w-full bg-realestate-primary hover:bg-realestate-primary/90"
             disabled={isLoading}
           >
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
+
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{' '}
+              <a href="/signup" className="text-blue-600 hover:underline">
+                Sign up
+              </a>
+            </p>
+          </div>
+          
+          <div className="text-center mt-4">
+            <p className="text-xs text-gray-500">
+              Demo accounts:<br/>
+              Admin: john@estatex.com<br/>
+              Agent: sarah@estatex.com<br/>
+              Password: password123 (not actually validated in this demo)
+            </p>
+          </div>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col">
-        <div className="mt-2 text-center text-sm">
-          Don't have an account?{' '}
-          <Link
-            to="/signup"
-            className="text-realestate-secondary hover:underline"
-          >
-            Sign up
-          </Link>
-        </div>
-      </CardFooter>
     </Card>
   );
 };

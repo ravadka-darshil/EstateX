@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { properties } from '@/data/properties';
+import { agents } from '@/data/agents';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -10,8 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Phone, Mail, MapPin, User, MessageSquare } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const Contact = () => {
+  const navigate = useNavigate();
   const { agentId } = useParams<{ agentId: string }>();
   const [searchParams] = useSearchParams();
   const propertyId = searchParams.get('property');
@@ -25,23 +28,24 @@ const Contact = () => {
   
   const property = propertyId ? properties.find(p => p.id === propertyId) : null;
   
-  // Find agent details - in a real app, you would fetch this from an API
-  const agent = property?.agent || {
-    id: agentId || '1',
-    name: 'Jane Smith',
-    phone: '(555) 123-4567',
-    email: 'jane.smith@estatex.com',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
-  };
+  // Find agent details from our agents data
+  const agent = agents.find(a => a.id === agentId);
   
   useEffect(() => {
+    // If agent doesn't exist, redirect to agents page
+    if (!agent) {
+      toast.error("Agent not found");
+      navigate('/agents');
+      return;
+    }
+    
     if (property) {
       setFormData(prev => ({
         ...prev,
         message: `I'm interested in ${property.title} at ${property.location.address}, ${property.location.city}. Please provide more information.`
       }));
     }
-  }, [property]);
+  }, [agent, property, navigate]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -68,6 +72,8 @@ const Contact = () => {
     });
   };
 
+  if (!agent) return null;
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="bg-realestate-primary py-12">
@@ -82,7 +88,7 @@ const Contact = () => {
           <div className="lg:col-span-2">
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-2xl font-bold mb-6">Send a Message</h2>
+                <h2 className="text-2xl font-bold mb-6">Send a Message to {agent.name}</h2>
                 
                 {property && (
                   <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -194,11 +200,30 @@ const Contact = () => {
                   </Avatar>
                   <div>
                     <h3 className="font-bold text-lg">{agent.name}</h3>
-                    <p className="text-sm text-gray-600">Real Estate Agent</p>
+                    <p className="text-sm text-gray-600">
+                      {agent.role === 'admin' ? 'Senior Real Estate Agent' : 'Real Estate Agent'}
+                    </p>
                   </div>
                 </div>
                 
-                <Separator className="my-4" />
+                {agent.bio && (
+                  <>
+                    <p className="text-sm text-gray-700 mt-3">{agent.bio}</p>
+                    <Separator className="my-4" />
+                  </>
+                )}
+                
+                {agent.specialties && agent.specialties.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm font-semibold mb-2">Specialties:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {agent.specialties.map((specialty, index) => (
+                        <Badge key={index} variant="outline">{specialty}</Badge>
+                      ))}
+                    </div>
+                    <Separator className="my-4" />
+                  </div>
+                )}
                 
                 <div className="space-y-4">
                   <div className="flex items-center">

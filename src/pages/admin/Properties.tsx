@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { 
   Plus, 
@@ -274,9 +273,9 @@ const AdminProperties = () => {
         </CardContent>
       </Card>
 
-      {/* Add Property Dialog */}
+      {/* Add Property Dialog - Modified for better responsiveness */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="max-w-4xl w-[95%] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Property</DialogTitle>
             <DialogDescription>
@@ -287,9 +286,9 @@ const AdminProperties = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Property Dialog */}
+      {/* Edit Property Dialog - Modified for better responsiveness */}
       <Dialog open={!!propertyToEdit} onOpenChange={(open) => !open && setPropertyToEdit(null)}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="max-w-4xl w-[95%] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Property</DialogTitle>
             <DialogDescription>
