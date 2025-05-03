@@ -8,9 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, MapPin, Check, Star } from 'lucide-react';
-// Fix the import for hero-bg.jpg
-// We're using a relative path to the public directory
 import FeaturedProperties from '@/components/property/FeaturedProperties';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Index = () => {
   const [search, setSearch] = useState('');
@@ -30,43 +29,45 @@ const Index = () => {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section - Fixed with improved styling */}
       <section
-        className="relative bg-cover bg-center h-[80vh]"
+        className="relative bg-cover bg-center h-[85vh] flex items-center"
         style={{
-          // Fix the path to the hero image - using relative path from public folder
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hero-bg.jpg')`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/hero-bg.jpg')`,
+          backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
-          <h1 className="text-4xl md:text-6xl text-white font-bold text-center mb-6">
-            Find Your Dream Property
-          </h1>
-          <p className="text-xl text-white text-center mb-8 max-w-2xl">
-            Discover the perfect property in your favorite location. We have a wide range of properties to suit your needs.
-          </p>
-          
-          <form 
-            onSubmit={handleSearch} 
-            className="w-full max-w-3xl flex flex-col md:flex-row gap-2"
-          >
-            <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search for properties by location, type, etc."
-                className="pl-10 py-6 rounded-lg w-full text-lg"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="bg-realestate-secondary py-6 px-8 text-lg">
-              Search
-            </Button>
-          </form>
+        <div className="container mx-auto px-4 z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-6xl text-white font-bold mb-6 animate-fade-in">
+              Find Your Dream Property
+            </h1>
+            <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
+              Discover the perfect property in your favorite location. We have a wide range of properties to suit your needs.
+            </p>
+            
+            <form 
+              onSubmit={handleSearch} 
+              className="w-full max-w-3xl mx-auto flex flex-col md:flex-row gap-2"
+            >
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search for properties by location, type, etc."
+                  className="pl-10 py-6 rounded-lg w-full text-lg"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <Button type="submit" className="bg-realestate-secondary hover:bg-realestate-secondary/90 py-6 px-8 text-lg">
+                Search
+              </Button>
+            </form>
+          </div>
         </div>
         
-        <div className="absolute bottom-0 left-0 w-full flex justify-center">
+        <div className="absolute bottom-0 left-0 w-full">
           <div className="bg-white shadow-lg p-4 rounded-t-lg flex gap-8 overflow-x-auto justify-center">
             {['Houses', 'Apartments', 'Condos', 'Land', 'Commercial'].map((category, index) => (
               <Link 
@@ -158,33 +159,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Locations */}
-      <section className="py-16">
-        <div className="container">
-          <h2 className="section-title">Popular Locations</h2>
-          <p className="section-subtitle">Explore properties in these popular areas</p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-            {[
-              { name: 'New York', count: '245 properties' },
-              { name: 'Los Angeles', count: '184 properties' },
-              { name: 'Miami', count: '113 properties' },
-              { name: 'Chicago', count: '97 properties' }
-            ].map((location, index) => (
-              <Link to={`/properties?location=${location.name}`} key={index} className="group relative h-72 overflow-hidden rounded-lg">
-                <div className="absolute inset-0 bg-gray-400"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-5 text-white">
-                  <h3 className="text-2xl font-bold">{location.name}</h3>
-                  <p className="text-sm text-white/80">{location.count}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Our Agents */}
+      {/* Our Agents - Now with images */}
       <section className="py-16 bg-realestate-light">
         <div className="container">
           <h2 className="section-title">Our Expert Agents</h2>
@@ -193,7 +168,18 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
             {agents.slice(0, 4).map((agent) => (
               <Card key={agent.id} className="overflow-hidden">
-                <div className="h-60 bg-gray-200"></div>
+                <div className="h-60 bg-gray-200 relative overflow-hidden">
+                  <Avatar className="h-full w-full rounded-none">
+                    <AvatarImage 
+                      src={`https://images.unsplash.com/photo-${500 + parseInt(agent.id.replace('agent', '')) * 100}`} 
+                      alt={agent.name}
+                      className="object-cover object-center h-full w-full"
+                    />
+                    <AvatarFallback className="h-full w-full rounded-none">
+                      {agent.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
                 <CardContent className="p-5 text-center">
                   <h3 className="font-bold text-xl mb-1">{agent.name}</h3>
                   <p className="text-gray-500 text-sm mb-3">Real Estate Agent</p>
@@ -227,7 +213,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* CTA */}
+      {/* CTA - Fixed button styling */}
       <section className="py-16 bg-realestate-primary text-white">
         <div className="container">
           <div className="text-center max-w-3xl mx-auto">
