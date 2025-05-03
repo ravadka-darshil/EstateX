@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, MapPin, Check, Star } from 'lucide-react';
-import HeroBg from '/hero-bg.jpg';
+// Fix the import for hero-bg.jpg
+// We're using a relative path to the public directory
 import FeaturedProperties from '@/components/property/FeaturedProperties';
 
 const Index = () => {
@@ -33,7 +34,8 @@ const Index = () => {
       <section
         className="relative bg-cover bg-center h-[80vh]"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${HeroBg || '/hero-bg.jpg'})`,
+          // Fix the path to the hero image - using relative path from public folder
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hero-bg.jpg')`,
         }}
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
