@@ -48,9 +48,9 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
   };
 
   const resetFilters = () => {
-    const defaultFilters = {
+    const defaultFilters: FilterValues = {
       search: '',
-      priceRange: [0, 2000000],
+      priceRange: [0, 2000000] as [number, number],
       bedrooms: 'any',
       propertyType: 'any',
     };
@@ -105,7 +105,7 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
                     value={filters.priceRange}
                     max={2000000}
                     step={50000}
-                    onValueChange={(value) => handleChange('priceRange', value)}
+                    onValueChange={(value) => handleChange('priceRange', value as [number, number])}
                     className="mt-6"
                   />
                 </div>
