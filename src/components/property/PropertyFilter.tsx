@@ -35,10 +35,11 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
   });
 
   const handleChange = (field: keyof FilterValues, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
+    const updatedFilters = {
+      ...filters,
       [field]: value,
-    }));
+    };
+    setFilters(updatedFilters);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,18 +48,14 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
   };
 
   const resetFilters = () => {
-    setFilters({
+    const defaultFilters = {
       search: '',
       priceRange: [0, 2000000],
       bedrooms: 'any',
       propertyType: 'any',
-    });
-    onFilter({
-      search: '',
-      priceRange: [0, 2000000],
-      bedrooms: 'any',
-      propertyType: 'any',
-    });
+    };
+    setFilters(defaultFilters);
+    onFilter(defaultFilters);
   };
 
   const formatPrice = (value: number) => {
@@ -105,7 +102,7 @@ const PropertyFilter = ({ onFilter }: PropertyFilterProps) => {
                 <Label className="mb-2 block">Price Range</Label>
                 <div className="px-2">
                   <Slider
-                    defaultValue={filters.priceRange}
+                    value={filters.priceRange}
                     max={2000000}
                     step={50000}
                     onValueChange={(value) => handleChange('priceRange', value)}

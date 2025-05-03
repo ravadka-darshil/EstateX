@@ -8,6 +8,7 @@ import { PropertyType } from '@/types/property';
 const Properties = () => {
   const [filteredProperties, setFilteredProperties] = useState<PropertyType[]>(properties);
   const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<string>("newest");
 
   const handleFilter = (filters: FilterValues) => {
     setLoading(true);
@@ -41,10 +42,40 @@ const Properties = () => {
         return true;
       });
       
-      setFilteredProperties(filtered);
+      // Sort the filtered properties
+      const sorted = sortProperties(filtered, sortBy);
+      setFilteredProperties(sorted);
       setLoading(false);
     }, 500);
   };
+
+  // Function to sort properties based on selected sort option
+  const sortProperties = (propertiesToSort: PropertyType[], sortOption: string) => {
+    switch (sortOption) {
+      case 'newest':
+        return [...propertiesToSort].sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case 'price-asc':
+        return [...propertiesToSort].sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return [...propertiesToSort].sort((a, b) => b.price - a.price);
+      default:
+        return propertiesToSort;
+    }
+  };
+
+  // Handle sort change
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSortBy = e.target.value;
+    setSortBy(newSortBy);
+    setFilteredProperties(sortProperties(filteredProperties, newSortBy));
+  };
+
+  // Initial sort on component mount
+  useEffect(() => {
+    setFilteredProperties(sortProperties(properties, sortBy));
+  }, []);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -70,7 +101,12 @@ const Properties = () => {
               </p>
               <div className="flex items-center gap-2">
                 <label htmlFor="sort" className="text-sm text-gray-600">Sort by:</label>
-                <select id="sort" className="border rounded p-1 text-sm">
+                <select 
+                  id="sort" 
+                  className="border rounded p-1 text-sm"
+                  value={sortBy}
+                  onChange={handleSortChange}
+                >
                   <option value="newest">Newest</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
