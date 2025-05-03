@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { PropertyForm } from '@/components/admin/PropertyForm';
 import { toast } from 'sonner';
 import { PropertyType } from '@/types/property';
+import { useNavigate } from 'react-router-dom';
 
 // For demo, we'll assume the agent is the second one in our list
 const currentAgentId = "agent2";
@@ -16,28 +17,74 @@ const currentAgentId = "agent2";
 const AgentDashboard = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [propertyToEdit, setPropertyToEdit] = useState<PropertyType | null>(null);
+  const [agentProperties, setAgentProperties] = useState(() => 
+    properties.filter(p => p.agent.id === currentAgentId)
+  );
+  const navigate = useNavigate();
   
   // Get current agent
   const currentAgent = agents.find(a => a.id === currentAgentId);
   
-  // Get properties for this agent only
-  const agentProperties = properties.filter(p => p.agent.id === currentAgentId);
-  
   const handleAddProperty = (property: PropertyType) => {
     // In a real app, this would send data to an API
+    // For now, we'll update our local state and the imported properties array
+    const newProperty = {
+      ...property,
+      agent: currentAgent || {
+        id: currentAgentId,
+        name: currentAgent?.name || "Agent",
+        phone: currentAgent?.phone || "555-1234",
+        email: currentAgent?.email || "agent@example.com",
+        avatar: currentAgent?.avatar || "/placeholder.svg"
+      },
+      agentId: currentAgentId
+    };
+    
+    // Update the properties array (this is a hack for demo purposes - in a real app we'd use an API)
+    properties.unshift(newProperty);
+    
+    // Update local state
+    setAgentProperties([newProperty, ...agentProperties]);
+    
     toast.success("Property added successfully!");
     setIsAddDialogOpen(false);
   };
 
   const handleUpdateProperty = (property: PropertyType) => {
     // In a real app, this would send data to an API
+    // For now, we'll update our local state and the imported properties array
+    const updatedProperties = agentProperties.map(p => 
+      p.id === property.id ? { ...property, agent: p.agent, agentId: currentAgentId } : p
+    );
+    
+    // Update the main properties array
+    const mainIndex = properties.findIndex(p => p.id === property.id);
+    if (mainIndex !== -1) {
+      properties[mainIndex] = { ...property, agent: properties[mainIndex].agent, agentId: currentAgentId };
+    }
+    
+    setAgentProperties(updatedProperties);
     toast.success("Property updated successfully!");
     setPropertyToEdit(null);
   };
 
   const handleDeleteProperty = (propertyId: string) => {
     // In a real app, this would send a request to an API
+    // For now, we'll update our local state and the imported properties array
+    const updatedProperties = agentProperties.filter(p => p.id !== propertyId);
+    
+    // Update the main properties array
+    const mainIndex = properties.findIndex(p => p.id === propertyId);
+    if (mainIndex !== -1) {
+      properties.splice(mainIndex, 1);
+    }
+    
+    setAgentProperties(updatedProperties);
     toast.success("Property deleted successfully!");
+  };
+
+  const handleViewProperty = (propertyId: string) => {
+    navigate(`/properties/${propertyId}`);
   };
 
   if (!currentAgent) return null;
@@ -65,7 +112,13 @@ const AgentDashboard = () => {
               {agentProperties.map(property => (
                 <div key={property.id} className="flex items-center justify-between border-b pb-4">
                   <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 bg-gray-100 rounded flex-shrink-0" />
+                    <div className="h-16 w-16 bg-gray-100 rounded flex-shrink-0">
+                      <img 
+                        src={property.images[0] || "/placeholder.svg"} 
+                        alt={property.title}
+                        className="h-full w-full object-cover rounded"
+                      />
+                    </div>
                     <div>
                       <h3 className="font-medium">{property.title}</h3>
                       <p className="text-sm text-gray-500">{property.location.city}, {property.location.state}</p>
@@ -73,10 +126,12 @@ const AgentDashboard = () => {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="icon" asChild>
-                      <a href={`/properties/${property.id}`} target="_blank" rel="noopener noreferrer">
-                        <Eye className="h-4 w-4" />
-                      </a>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => handleViewProperty(property.id)}
+                    >
+                      <Eye className="h-4 w-4" />
                     </Button>
                     <Button 
                       variant="ghost" 
